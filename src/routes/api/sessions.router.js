@@ -1,0 +1,30 @@
+import { Router } from 'express';
+import passport from 'passport';
+import { loginController, logoutController, signUpController } from "../../controller/sessions.controller.js"
+
+
+// Importar todos los routers;
+export const router = Router();
+
+
+router.post("/login", passport.authenticate("login"), loginController)
+
+router.delete('/logout', logoutController)
+
+router.post("/register", passport.authenticate("signup"), async (req, res) => {
+
+    if (req.user) res.status(200).json({ result: req.user })
+
+})
+
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+router.get('/githubcallback', passport.authenticate('github'), async (req, res) => {
+    if (req.user) res.redirect("../../products")
+
+})
+
+
+
+
+
+
